@@ -14,13 +14,8 @@ const app = express()
 app.use(express.json())
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://rad-71deploy-fe.vercel.app/",
-      "https://venerable-croquembouche-11613c.netlify.app/"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
+    origin: ["http://localhost:5173","https://rad-71deploy-fe.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"]
   })
 )
 
@@ -29,7 +24,6 @@ app.use("/api/v1/post", postRouter)
 app.get("/", (req, res) => {
   res.send("Backend is running...")
 })
-
 
 mongoose
   .connect(MONGO_URI)
