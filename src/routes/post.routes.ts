@@ -4,6 +4,7 @@ import { authenticate } from "../middleware/auth"
 import { requireRole } from "../middleware/role"
 import { Role } from "../models/User"
 import { upload } from "../middleware/upload"
+import { generateContent } from "../controllers/ai.controller"
 
 const route = Router()
 
@@ -23,5 +24,7 @@ route.get(
   requireRole([Role.ADMIN, Role.AUTHOR]),
   getMyPost
 )
+
+route.post("/ai/generate", generateContent)
 
 export default route

@@ -3,6 +3,9 @@ import { IUser, Role, Status, User } from "../models/User"
 import bcrypt from "bcryptjs"
 import { signAccessToken } from "../utils/tokens"
 import { AuthRequest } from "../middleware/auth"
+import jwt from "jsonwebtoken"
+
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -70,13 +73,15 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const accessToken = signAccessToken(existingUser)
+    const refreshToken = signAccessToken(existingUser)
 
     res.status(200).json({
       message: "success",
       data: {
         email: existingUser.email,
         roles: existingUser.roles,
-        accessToken
+        accessToken,
+        refreshToken
       }
     })
   } catch (err: any) {
@@ -108,3 +113,30 @@ export const getMyDetails = async (req: AuthRequest, res: Response) => {
 }
 
 export const registerAdmin = (req: Request, res: Response) => {}
+
+
+export const handleRefreshToken = async (req: Request, res: Response) => {
+
+  try {
+    const  { token }  = req.body
+
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" })
+    }
+
+    const payload = jwt.verify(token, JWT_REFRESH_SECRET)
+
+    const user = await User.findById(payload.sub)
+
+    if (!user) {
+      return res.status(403).json({ message: "Invalid expire token" })
+    }
+
+    const accessToken = signAccessToken(user)
+
+    res.status(200).json({ accessToken })
+
+  } catch (error) {
+    res.status(500).json({ message: "Invalid or expire token" })
+  }
+}
