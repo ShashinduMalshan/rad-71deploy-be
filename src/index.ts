@@ -16,7 +16,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://rad-71deploy-fe.vercel.app/"
+      "https://rad-71deploy-fe.vercel.app/",
+      "https://venerable-croquembouche-11613c.netlify.app/"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
