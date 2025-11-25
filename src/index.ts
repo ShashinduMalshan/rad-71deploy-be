@@ -26,7 +26,10 @@ app.get("/", (req, res) => {
 })
 
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 20000,
+  socketTimeoutMS: 45000
+})
   .then(() => {
     console.log("DB connected")
   })
